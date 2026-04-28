@@ -53,7 +53,7 @@ public class Wallet extends BaseEntity {
         chackBalance();
         chackAmount(amount);
 
-        if (this.balance.compareTo(amount) < 0) {
+        if (this.balance.compareTo(amount) <= 0) {
             // exception fırlat - bakiye tutardan büyük
         }
 
@@ -69,19 +69,6 @@ public class Wallet extends BaseEntity {
         this.blocked = this.blocked.add(amount);
     }
 
-    public void changeAuctionAmount(BigDecimal amount){
-        chackBalance();
-        chackBlocked();
-        chackAmount(amount);
-
-        if (this.blocked.compareTo(amount) < 0){
-            // exception fırlat - blokeli tutar çekilecek tutardan büyük
-        }
-
-        addBalance(amount);
-        this.blocked = this.blocked.subtract(amount);
-    }
-
     public void endAuctionAmount(BigDecimal amount){
         chackBalance();
         chackBlocked();
@@ -92,5 +79,10 @@ public class Wallet extends BaseEntity {
         }
 
         this.blocked = this.blocked.subtract(amount);
+    }
+
+    public void changeAuctionAmount(BigDecimal amount){
+        endAuctionAmount(amount);
+        addBalance(amount);
     }
 }
