@@ -9,7 +9,9 @@ public enum ErrorType {
     GENERAL_ERROR("0x001", "General Error", HttpStatus.INTERNAL_SERVER_ERROR),
     NO_VALUE("0x002", "Değere ulaşılmadı, bulunamadı!", HttpStatus.BAD_REQUEST),
     NOT_ENOUGH_BALANCE("0x003", "Yetersiz bakiye!", HttpStatus.BAD_REQUEST),
-    NOT_ENOUGH_BLOCKED("0x004", "Yetersiz blokeli tutar!", HttpStatus.BAD_REQUEST)
+    NOT_ENOUGH_BLOCKED("0x004", "Yetersiz blokeli tutar!", HttpStatus.BAD_REQUEST),
+    TOKEN_EXPIRED("0x005", "Token Süresi dolmuştur!", HttpStatus.UNAUTHORIZED),
+    USER_NOT_FOUND("0x006", "Kullanıcı bulunamadı!", HttpStatus.UNAUTHORIZED),
     ;
 
     private final String code;

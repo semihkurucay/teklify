@@ -27,6 +27,14 @@ public class Wallet extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    public Wallet(){};
+
+    public Wallet(User user){
+        this.user = user;
+        this.balance = BigDecimal.ZERO;
+        this.blocked = BigDecimal.ZERO;
+    }
+
     private void chackBalance(){
         if (this.balance == null || this.balance.compareTo(BigDecimal.ZERO) < 0){
             throw new BaseException(new ErrorMessage("Bakiye", ErrorType.NO_VALUE));
@@ -40,7 +48,7 @@ public class Wallet extends BaseEntity {
     }
 
     private void chackAmount(BigDecimal amount){
-        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new BaseException(new ErrorMessage("Tutar", ErrorType.NO_VALUE));
         }
     }
