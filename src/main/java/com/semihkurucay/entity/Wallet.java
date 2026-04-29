@@ -1,5 +1,8 @@
 package com.semihkurucay.entity;
 
+import com.semihkurucay.enums.ErrorType;
+import com.semihkurucay.exception.BaseException;
+import com.semihkurucay.exception.ErrorMessage;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -26,19 +29,19 @@ public class Wallet extends BaseEntity {
 
     private void chackBalance(){
         if (this.balance == null || this.balance.compareTo(BigDecimal.ZERO) < 0){
-            // exception fırlat - bakiyelere ulaşılamadı
+            throw new BaseException(new ErrorMessage("Bakiye", ErrorType.NO_VALUE));
         }
     }
 
     private void chackBlocked(){
         if (this.blocked == null || this.blocked.compareTo(BigDecimal.ZERO) < 0){
-            // exception fırlat - bakiyelere ulaşılamadı
+            throw new BaseException(new ErrorMessage("Blokeli tutar", ErrorType.NO_VALUE));
         }
     }
 
     private void chackAmount(BigDecimal amount){
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            // exception fırlat - tutar null veya 0 ya da 0'dan küçük
+            throw new BaseException(new ErrorMessage("Tutar", ErrorType.NO_VALUE));
         }
     }
 
@@ -54,7 +57,7 @@ public class Wallet extends BaseEntity {
         chackAmount(amount);
 
         if (this.balance.compareTo(amount) <= 0) {
-            // exception fırlat - bakiye tutardan büyük
+            throw new BaseException(new ErrorMessage(null, ErrorType.NOT_ENOUGH_BALANCE));
         }
 
         this.balance = this.balance.subtract(amount);
@@ -69,20 +72,24 @@ public class Wallet extends BaseEntity {
         this.blocked = this.blocked.add(amount);
     }
 
-    public void endAuctionAmount(BigDecimal amount){
+    private void auctionAmount(BigDecimal amount){
         chackBalance();
         chackBlocked();
         chackAmount(amount);
 
         if (this.blocked.compareTo(amount) < 0){
-            // exception fırlat - blokeli tutar çekilecek tutardan büyük
+            throw new BaseException(new ErrorMessage(null, ErrorType.NOT_ENOUGH_BLOCKED));
         }
 
         this.blocked = this.blocked.subtract(amount);
     }
 
+    public void endAuctionAmount(BigDecimal amount){
+        auctionAmount(amount);
+    }
+
     public void changeAuctionAmount(BigDecimal amount){
-        endAuctionAmount(amount);
+        auctionAmount(amount);
         addBalance(amount);
     }
 }
