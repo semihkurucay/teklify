@@ -1,9 +1,11 @@
 package com.semihkurucay.enums;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorType {
 
     GENERAL_ERROR("0x001", "General Error", HttpStatus.INTERNAL_SERVER_ERROR),
