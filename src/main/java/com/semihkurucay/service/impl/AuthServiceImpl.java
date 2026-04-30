@@ -7,6 +7,7 @@ import com.semihkurucay.exception.BaseException;
 import com.semihkurucay.exception.ErrorMessage;
 import com.semihkurucay.jwt.JwtService;
 import com.semihkurucay.mapper.UserMapper;
+import com.semihkurucay.repository.LoginRepository;
 import com.semihkurucay.repository.RefreshTokenRepository;
 import com.semihkurucay.repository.UserRepository;
 import com.semihkurucay.repository.WalletRepository;
@@ -28,6 +29,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private final LoginRepository loginRepository;
     private final UserRepository userRepository;
     private final WalletRepository walletRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -126,6 +128,10 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public DtoAuthLoginResponse register(DtoRegisterUser request) {
+        if(loginRepository.existsByUsername((request.getLogin().getUsername()))){
+            // exception fırlat username already exists
+        }
+
         User user = userMapper.toEntityUser(request);
         user.getLogin().setPassword(
                 passwordEncoder.encode(
