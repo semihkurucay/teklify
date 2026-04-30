@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
     private User findUserByUsername(String username){
         return userRepository.findByLogin_username(username)
-                .orElseThrow(() -> new BaseException(new ErrorMessage()));
+                .orElseThrow(() -> new BaseException(new ErrorMessage(null, ErrorType.USER_NOT_FOUND)));
     }
 
     private String createRefreshToken(User user){
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
 
     private DtoLoginUser userConverterDto(User user){
         Wallet wallet = walletRepository.findByUser_Id(user.getId())
-                .orElseThrow(() -> new BaseException(new ErrorMessage()));
+                .orElseThrow(() -> new BaseException(new ErrorMessage("Bakiye", ErrorType.NO_VALUE)));
 
         DtoLoginUser dtoUser = new DtoLoginUser();
         dtoUser.setId(user.getId());
@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
             Authentication authentication = authenticationProvider.authenticate(authenticationToken);
 
             if(authentication == null || authentication.getPrincipal() == null){
-                // exception fırlat authantication failed
+                throw new BaseException(new ErrorMessage(null, ErrorType.INCORRECT_CREDENTIALS));
             }
 
             CustomUserDetail customUserDetail = (CustomUserDetail) authentication.getPrincipal();
@@ -95,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
 
             return createLoginResponse(user, customUserDetail);
         }catch (BadCredentialsException e){
-            throw new BaseException(new ErrorMessage());
+            throw new BaseException(new ErrorMessage(null, ErrorType.INCORRECT_CREDENTIALS));
         }
         catch (Exception e){
             throw new BaseException(new ErrorMessage(null, ErrorType.GENERAL_ERROR));
@@ -111,25 +111,26 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.deleteByRefreshToken(refreshToken.getRefreshToken());
 
         if(refreshToken.getExpTime().isBefore(LocalDateTime.now())){
-            // exception fırlat token expired
+            throw new BaseException(new ErrorMessage(null, ErrorType.REFRESH_TOKEN_EXPIRED));
         }
 
         if(refreshToken.getUser() == null || refreshToken.getUser().getLogin() == null){
-            // exception fırlat token invalid
+            throw new BaseException(new ErrorMessage(null, ErrorType.USER_NOT_FOUND));
         }
 
         User user = refreshToken.getUser();
         Login login = user.getLogin();
 
         return new DtoAuthResponse(
-                createAccessToken(new CustomUserDetail(login.getUsername(), login.getPassword())), createRefreshToken(user));
+                createAccessToken(
+                        new CustomUserDetail(login.getUsername(), login.getPassword())), createRefreshToken(user));
     }
 
     @Transactional
     @Override
     public DtoAuthLoginResponse register(DtoRegisterUser request) {
         if(loginRepository.existsByUsername((request.getLogin().getUsername()))){
-            // exception fırlat username already exists
+            throw new BaseException(new ErrorMessage(null, ErrorType.REPETITIVE_RECORDING));
         }
 
         User user = userMapper.toEntityUser(request);

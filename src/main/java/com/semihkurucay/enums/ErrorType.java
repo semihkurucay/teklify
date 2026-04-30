@@ -11,7 +11,10 @@ public enum ErrorType {
     NOT_ENOUGH_BALANCE("0x003", "Yetersiz bakiye!", HttpStatus.BAD_REQUEST),
     NOT_ENOUGH_BLOCKED("0x004", "Yetersiz blokeli tutar!", HttpStatus.BAD_REQUEST),
     TOKEN_EXPIRED("0x005", "Token Süresi dolmuştur!", HttpStatus.UNAUTHORIZED),
+    REFRESH_TOKEN_EXPIRED("0x006", "Refresh token süresi dolmuştur.", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("0x006", "Kullanıcı bulunamadı!", HttpStatus.UNAUTHORIZED),
+    INCORRECT_CREDENTIALS("0x007", "Yanlış kullanıcı adı veya şifre!", HttpStatus.UNAUTHORIZED),
+    REPETITIVE_RECORDING("0x009", "Bu kayıt zaten mevcut.", HttpStatus.CONFLICT),
     ;
 
     private final String code;
