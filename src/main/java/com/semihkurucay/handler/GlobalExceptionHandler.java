@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
                         createApiError(
                                 ex.getErrorMessage().getErrorType().getHttpStatus(),
                                 request,
-                                ex.getErrorMessage()
+                                ex.getMessage()
                         )
                 );
     }

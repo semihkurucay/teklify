@@ -106,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public DtoAuthResponse refreshToken(DtoAuthRefreshTokenRequest request) {
         RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(request.getRefreshToken())
-                .orElseThrow(() -> new BaseException(new ErrorMessage()));
+                .orElseThrow(() -> new BaseException(new ErrorMessage(null, ErrorType.NO_VALUE)));
 
         refreshTokenRepository.deleteByRefreshToken(refreshToken.getRefreshToken());
 
