@@ -16,17 +16,17 @@ class RestAuthControllerImpl extends RestBaseController implements RestAuthContr
     private final AuthService authService;
 
     @Override
-    public RootEntity<DtoAuthLoginResponse> login(@Valid @RequestBody DtoAuthRequest request) {
+    public RootEntity<DtoAuthLoginResponse> login(DtoAuthRequest request) {
         return ok(authService.login(request));
     }
 
     @Override
-    public RootEntity<DtoAuthResponse> refreshToken(@Valid @RequestBody DtoAuthRefreshTokenRequest request) {
+    public RootEntity<DtoAuthResponse> refreshToken(DtoAuthRefreshTokenRequest request) {
         return ok(authService.refreshToken(request));
     }
 
     @Override
-    public RootEntity<DtoAuthLoginResponse> register(@Valid @RequestBody DtoRegisterUser register) {
+    public RootEntity<DtoAuthLoginResponse> register(DtoRegisterUser register) {
         return ok(authService.register(register));
     }
 }
