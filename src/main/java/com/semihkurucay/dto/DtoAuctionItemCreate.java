@@ -19,5 +19,4 @@ public class DtoAuctionItemCreate {
     private BigDecimal minimumPrice;
     private Long categoryId;
     private List<DtoAuctionItemImageIU> image;
-    private Long createdUserId;
 }
