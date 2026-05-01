@@ -2,6 +2,7 @@ package com.semihkurucay.controller.impl;
 
 import com.semihkurucay.controller.RestAuctionItemController;
 import com.semihkurucay.controller.RootEntity;
+import com.semihkurucay.dto.DtoAuctionItem;
 import com.semihkurucay.dto.DtoAuctionItemCreate;
 import com.semihkurucay.dto.DtoAuctionItemView;
 import com.semihkurucay.service.AuctionItemService;
@@ -28,5 +29,10 @@ class RestAuctionItemControllerImpl extends RestBaseController implements RestAu
     public RootEntity<String> cancelAuctionItem(Principal principal, @PathVariable(name = "id") Long auctionItemId) {
         auctionItemService.cancelAuctionItem(principal.getName(), auctionItemId);
         return ok("Complated");
+    }
+
+    @Override
+    public RootEntity<DtoAuctionItem> getAuctionItemById(Long auctionItemId) {
+        return ok(auctionItemService.getAuctionItemById(auctionItemId));
     }
 }

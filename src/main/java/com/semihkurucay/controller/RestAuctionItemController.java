@@ -1,5 +1,6 @@
 package com.semihkurucay.controller;
 
+import com.semihkurucay.dto.DtoAuctionItem;
 import com.semihkurucay.dto.DtoAuctionItemCreate;
 import com.semihkurucay.dto.DtoAuctionItemView;
 import jakarta.validation.Valid;
@@ -15,4 +16,7 @@ public interface RestAuctionItemController {
 
     @PatchMapping("/cancel/{id}")
     RootEntity<String> cancelAuctionItem(Principal principal, @PathVariable(name = "id") Long auctionItemId);
+
+    @GetMapping("/{id}")
+    RootEntity<DtoAuctionItem> getAuctionItemById(@PathVariable(name = "id") Long auctionItemId);
 }

@@ -1,5 +1,6 @@
 package com.semihkurucay.service.impl;
 
+import com.semihkurucay.dto.DtoAuctionItem;
 import com.semihkurucay.dto.DtoAuctionItemCreate;
 import com.semihkurucay.dto.DtoAuctionItemView;
 import com.semihkurucay.entity.AuctionItem;
@@ -40,14 +41,22 @@ class AuctionItemServiceImpl implements AuctionItemService {
                 .orElseThrow(() -> new BaseException(new ErrorMessage(null, ErrorType.USER_NOT_FOUND)));
     }
 
+    private Boolean chackDateControl(LocalDateTime startDate, LocalDateTime endDate) {
+        return startDate.isBefore(endDate);
+    }
+
+    private String getFullName(User user){
+        return user == null ? "" : user.getFirstName() + " " + user.getLastName();
+    }
+
     @Transactional
     @Override
     public DtoAuctionItemView createAuctionItem(String username, DtoAuctionItemCreate dtoAuctionItemCreate) {
-        if(dtoAuctionItemCreate.getStartDate().isBefore(LocalDateTime.now())){
+        if(chackDateControl(dtoAuctionItemCreate.getStartDate(), LocalDateTime.now())){
             throw new BaseException(new ErrorMessage(null, ErrorType.START_DATE_MUST_BE_AFTER_CURRENT_DATE));
         }
 
-        if(dtoAuctionItemCreate.getStartDate().plusHours(1).isAfter(dtoAuctionItemCreate.getEndDate())){
+        if(chackDateControl(dtoAuctionItemCreate.getEndDate(), dtoAuctionItemCreate.getStartDate().plusHours(1))){
             throw new BaseException(new ErrorMessage(null, ErrorType.END_DATE_MUST_BE_AFTER_START_DATE));
         }
 
@@ -63,6 +72,7 @@ class AuctionItemServiceImpl implements AuctionItemService {
 
         DtoAuctionItemView dto = auctionItemMapper.toDtoAuctionItemView(auctionItemRepository.save(auctionItem));
         dto.setCategoryName(auctionItem.getCategory().getName());
+        dto.setCreatedUserFullName(getFullName(auctionItem.getCreatedUser()));
         return dto;
     }
 
@@ -72,7 +82,7 @@ class AuctionItemServiceImpl implements AuctionItemService {
         AuctionItem auctionItem = auctionItemRepository.findMyAuctionItemById(username, auctionItemId)
                 .orElseThrow(() -> new BaseException(new ErrorMessage("Teklif", ErrorType.NO_VALUE)));
 
-        if(auctionItem.getStartDate().plusMinutes(-15).isBefore(LocalDateTime.now()) || auctionItem.getStatus() != AuctionStatus.CREATED){
+        if(chackDateControl(auctionItem.getStartDate().plusMinutes(-15), LocalDateTime.now()) || auctionItem.getStatus() != AuctionStatus.CREATED){
             throw new BaseException(new ErrorMessage(null, ErrorType.CANCELATION_NOT_ALLOWED_EXPIRED));
         }
 
@@ -83,5 +93,18 @@ class AuctionItemServiceImpl implements AuctionItemService {
         auctionItem.setIsActive(false);
         auctionItem.setStatus(AuctionStatus.CANCELLED);
         auctionItemRepository.save(auctionItem);
+    }
+
+    @Override
+    public DtoAuctionItem getAuctionItemById(Long auctionItemId) {
+        AuctionItem auctionItem = auctionItemRepository.findById(auctionItemId)
+                .orElseThrow(() -> new BaseException(new ErrorMessage("Teklif", ErrorType.NO_VALUE)));
+
+        DtoAuctionItem dtoAuctionItem = auctionItemMapper.toDtoAuctionItem(auctionItem);
+        dtoAuctionItem.setBidUserFullName(getFullName(auctionItem.getBidUser()));
+        dtoAuctionItem.setCreatedUserFullName(getFullName(auctionItem.getCreatedUser()));
+        dtoAuctionItem.setCategoryName(auctionItem.getCategory().getName());
+
+        return dtoAuctionItem;
     }
 }

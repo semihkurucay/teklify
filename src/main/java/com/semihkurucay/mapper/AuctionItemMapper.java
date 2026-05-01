@@ -1,5 +1,6 @@
 package com.semihkurucay.mapper;
 
+import com.semihkurucay.dto.DtoAuctionItem;
 import com.semihkurucay.dto.DtoAuctionItemCreate;
 import com.semihkurucay.dto.DtoAuctionItemView;
 import com.semihkurucay.entity.AuctionItem;
@@ -10,4 +11,5 @@ public interface AuctionItemMapper {
 
     AuctionItem toEntityAuctionItem(DtoAuctionItemCreate dtoAuctionItemCreate);
     DtoAuctionItemView toDtoAuctionItemView(AuctionItem auctionItem);
+    DtoAuctionItem toDtoAuctionItem(AuctionItem auctionItem);
 }
