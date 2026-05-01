@@ -15,6 +15,19 @@ import java.util.List;
 @Setter
 public class AuctionItem extends BaseDateEntity {
 
+    @Column(name = "title", nullable = false, length = 30)
+    private String title;
+
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
@@ -30,16 +43,6 @@ public class AuctionItem extends BaseDateEntity {
     @Column(name = "current_price", nullable = false)
     private BigDecimal currentPrice;
 
-    @Column(name = "title", nullable = false, length = 30)
-    private String title;
-
-    @Column(name = "description", nullable = false, length = 255)
-    private String description;
-
-    @Version
-    @Column(name = "version")
-    private Long version;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private AuctionStatus status;
@@ -48,8 +51,7 @@ public class AuctionItem extends BaseDateEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany
-    @JoinColumn(name = "image_id")
+    @OneToMany(mappedBy = "auctionItem", cascade = CascadeType.ALL)
     private List<AuctionItemImage> image;
 
     @ManyToOne

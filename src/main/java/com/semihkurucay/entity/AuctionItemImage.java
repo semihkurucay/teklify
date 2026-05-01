@@ -1,8 +1,6 @@
 package com.semihkurucay.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +12,8 @@ public class AuctionItemImage extends BaseEntity {
 
     @Column(name = "image_path")
     private String imagePath;
+
+    @ManyToOne
+    @JoinColumn(name = "auction_item_id")
+    private AuctionItem auctionItem;
 }
