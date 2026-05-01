@@ -11,9 +11,8 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DtoLoginUser {
+public class DtoLoginUser extends DtoBaseEntity {
 
-    private Long id;
     private String fullname;
     private BigDecimal balance;
 }
