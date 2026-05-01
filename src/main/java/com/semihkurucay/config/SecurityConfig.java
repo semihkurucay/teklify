@@ -26,7 +26,6 @@ public class SecurityConfig {
             "/auth",
             "/auth/**",
             "/register",
-            "/public",
             "/error",
             "/v3/api-docs/**",
             "/api-docs",
