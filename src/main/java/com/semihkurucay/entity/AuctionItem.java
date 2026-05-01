@@ -44,9 +44,9 @@ public class AuctionItem extends BaseDateEntity {
     @Column(name = "status", nullable = false)
     private AuctionStatus status;
 
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "category_id")
-    private List<Category> category;
+    private Category category;
 
     @OneToMany
     @JoinColumn(name = "image_id")
