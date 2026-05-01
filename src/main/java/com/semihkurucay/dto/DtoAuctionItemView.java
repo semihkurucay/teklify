@@ -17,7 +17,7 @@ import java.util.List;
 public class DtoAuctionItemView extends DtoBaseDateEntity {
 
     private String title;
-    private BigDecimal startPrice;
+    private BigDecimal currentPrice;
     private AuctionStatus status;
     private String categoryName;
     private LocalDateTime startDate;

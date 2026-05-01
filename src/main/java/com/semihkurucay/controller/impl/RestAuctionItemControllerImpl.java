@@ -20,7 +20,7 @@ class RestAuctionItemControllerImpl extends RestBaseController implements RestAu
     private final AuctionItemService auctionItemService;
 
     @Override
-    public RootEntity<DtoAuctionItemView> createAuctionItem(Principal principal, /*@Valid @RequestBody */DtoAuctionItemCreate dtoAuctionItemCreate) {
+    public RootEntity<DtoAuctionItemView> createAuctionItem(Principal principal, DtoAuctionItemCreate dtoAuctionItemCreate) {
         return ok(auctionItemService.createAuctionItem(principal.getName(), dtoAuctionItemCreate));
     }
 

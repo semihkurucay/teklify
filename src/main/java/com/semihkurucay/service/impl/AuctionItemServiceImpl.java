@@ -43,6 +43,14 @@ class AuctionItemServiceImpl implements AuctionItemService {
     @Transactional
     @Override
     public DtoAuctionItemView createAuctionItem(String username, DtoAuctionItemCreate dtoAuctionItemCreate) {
+        if(dtoAuctionItemCreate.getStartDate().isBefore(LocalDateTime.now())){
+            throw new BaseException(new ErrorMessage(null, ErrorType.START_DATE_MUST_BE_AFTER_CURRENT_DATE));
+        }
+
+        if(dtoAuctionItemCreate.getStartDate().plusHours(1).isAfter(dtoAuctionItemCreate.getEndDate())){
+            throw new BaseException(new ErrorMessage(null, ErrorType.END_DATE_MUST_BE_AFTER_START_DATE));
+        }
+
         AuctionItem auctionItem = auctionItemMapper.toEntityAuctionItem(dtoAuctionItemCreate);
         auctionItem.setCreatedUser(getUserByUsername(username));
         auctionItem.setIsActive(true);
@@ -50,9 +58,12 @@ class AuctionItemServiceImpl implements AuctionItemService {
         auctionItem.setStatus(AuctionStatus.CREATED);
         auctionItem.setCategory(getCategoryById(dtoAuctionItemCreate.getCategoryId()));
 
-        return auctionItemMapper.toDtoAuctionItemView(
-                auctionItemRepository.save(auctionItem)
-        );
+        auctionItem.getImage()
+                .forEach(image -> image.setAuctionItem(auctionItem));
+
+        DtoAuctionItemView dto = auctionItemMapper.toDtoAuctionItemView(auctionItemRepository.save(auctionItem));
+        dto.setCategoryName(auctionItem.getCategory().getName());
+        return dto;
     }
 
     @Transactional

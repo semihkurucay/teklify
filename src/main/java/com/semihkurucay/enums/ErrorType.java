@@ -17,6 +17,8 @@ public enum ErrorType {
     REPETITIVE_RECORDING("0x009", "Bu kayıt zaten mevcut.", HttpStatus.CONFLICT),
     CANCELATION_NOT_ALLOWED_EXPIRED("0x010", "Son 15 dakika kala ihale iptal edilemez!", HttpStatus.BAD_REQUEST),
     AUCTION_NOT_ACTIVE("0x011", "İhale aktif değil!", HttpStatus.BAD_REQUEST),
+    START_DATE_MUST_BE_AFTER_CURRENT_DATE("0x012", "Başlangıç tarihi mevcut tarihden sonra olmalıdır!", HttpStatus.BAD_REQUEST),
+    END_DATE_MUST_BE_AFTER_START_DATE("0x013", "Bitiş tarihi başlangıç tarihinden en az 1 saat sonra olmalı!", HttpStatus.BAD_REQUEST),
     ;
 
     private final String code;

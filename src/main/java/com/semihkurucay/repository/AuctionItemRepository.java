@@ -1,8 +1,10 @@
 package com.semihkurucay.repository;
 
 import com.semihkurucay.entity.AuctionItem;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -14,5 +16,5 @@ public interface AuctionItemRepository extends JpaRepository<AuctionItem, Long> 
             "FROM AuctionItem a " +
             "WHERE a.createdUser.login.username = :username " +
             "AND a.id = :id")
-    Optional<AuctionItem> findMyAuctionItemById(String username, Long id);
+    Optional<AuctionItem> findMyAuctionItemById(@Param("username") String username, @Param("id") Long id);
 }
