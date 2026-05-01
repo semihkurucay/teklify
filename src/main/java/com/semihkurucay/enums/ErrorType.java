@@ -15,6 +15,8 @@ public enum ErrorType {
     USER_NOT_FOUND("0x006", "Kullanıcı bulunamadı!", HttpStatus.UNAUTHORIZED),
     INCORRECT_CREDENTIALS("0x007", "Yanlış kullanıcı adı veya şifre!", HttpStatus.UNAUTHORIZED),
     REPETITIVE_RECORDING("0x009", "Bu kayıt zaten mevcut.", HttpStatus.CONFLICT),
+    CANCELATION_NOT_ALLOWED_EXPIRED("0x010", "Son 15 dakika kala ihale iptal edilemez!", HttpStatus.BAD_REQUEST),
+    AUCTION_NOT_ACTIVE("0x011", "İhale aktif değil!", HttpStatus.BAD_REQUEST),
     ;
 
     private final String code;

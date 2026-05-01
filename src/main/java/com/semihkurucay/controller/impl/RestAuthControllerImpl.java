@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class RestAuthControllerImpl extends RestBaseController implements RestAuthController {
+class RestAuthControllerImpl extends RestBaseController implements RestAuthController {
 
     private final AuthService authService;
 

@@ -27,7 +27,7 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+class AuthServiceImpl implements AuthService {
 
     private final LoginRepository loginRepository;
     private final UserRepository userRepository;

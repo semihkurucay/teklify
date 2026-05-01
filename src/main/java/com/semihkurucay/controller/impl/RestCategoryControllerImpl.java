@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class RestCategoryControllerImpl extends RestBaseController implements RestCategoryController {
+class RestCategoryControllerImpl extends RestBaseController implements RestCategoryController {
 
     private final CategoryService categoryService;
 
