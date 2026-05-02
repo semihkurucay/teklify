@@ -21,7 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.UUID;
 
 @Service
@@ -134,6 +136,12 @@ class AuthServiceImpl implements AuthService {
         }
 
         User user = userMapper.toEntityUser(request);
+
+        int age = Period.between(request.getBirthDay(), LocalDate.now()).getYears();
+        if(age < 18){
+            throw new BaseException(new ErrorMessage(null, ErrorType.USER_NOT_ELIGIBLE));
+        }
+
         user.getLogin().setPassword(
                 passwordEncoder.encode(
                         user.getLogin().getPassword()));
