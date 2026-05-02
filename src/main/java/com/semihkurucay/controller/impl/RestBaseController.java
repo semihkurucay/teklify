@@ -15,11 +15,11 @@ class RestBaseController {
         return RootEntity.ok(data);
     }
 
-    public Pageable toPageableEntity(RestPageableRequest request){
+    public Pageable toPageable(RestPageableRequest request){
         return PageUtils.toPageable(request);
     }
 
-    public <T> RestPageableEntity<T> toPageableEntity(Page<?> page, List<T> content) {
+    public <T> RestPageableEntity<T> restPageableEntity(Page<?> page, List<T> content) {
         return PageUtils.toRestPageableEntity(page, content);
     }
 }

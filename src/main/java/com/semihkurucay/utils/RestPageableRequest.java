@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class RestPageableRequest {
 
-    private Integer page;
-    private Integer size;
+    private Integer page = 0;
+    private Integer size = 10;
     private String column;
-    private Boolean asc = true;
+    private Boolean asc = false;
 }

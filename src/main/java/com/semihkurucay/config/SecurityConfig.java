@@ -26,6 +26,7 @@ public class SecurityConfig {
             "/auth",
             "/auth/**",
             "/register",
+            "/auction-item/find-all-active",
             "/error",
             "/v3/api-docs/**",
             "/api-docs",

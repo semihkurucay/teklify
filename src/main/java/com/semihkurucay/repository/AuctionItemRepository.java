@@ -1,7 +1,9 @@
 package com.semihkurucay.repository;
 
 import com.semihkurucay.entity.AuctionItem;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +19,6 @@ public interface AuctionItemRepository extends JpaRepository<AuctionItem, Long> 
             "WHERE a.createdUser.login.username = :username " +
             "AND a.id = :id")
     Optional<AuctionItem> findMyAuctionItemById(@Param("username") String username, @Param("id") Long id);
+
+    Page<AuctionItem> findAll(Specification<AuctionItem> spec, Pageable pageable);
 }

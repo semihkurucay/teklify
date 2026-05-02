@@ -4,12 +4,14 @@ import com.semihkurucay.controller.RestAuctionItemController;
 import com.semihkurucay.controller.RootEntity;
 import com.semihkurucay.dto.DtoAuctionItem;
 import com.semihkurucay.dto.DtoAuctionItemCreate;
+import com.semihkurucay.dto.DtoAuctionItemPageFilter;
 import com.semihkurucay.dto.DtoAuctionItemView;
 import com.semihkurucay.service.AuctionItemService;
-import jakarta.validation.Valid;
+import com.semihkurucay.utils.RestPageableEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
@@ -34,5 +36,23 @@ class RestAuctionItemControllerImpl extends RestBaseController implements RestAu
     @Override
     public RootEntity<DtoAuctionItem> getAuctionItemById(Long auctionItemId) {
         return ok(auctionItemService.getAuctionItemById(auctionItemId));
+    }
+
+    @Override
+    public RootEntity<RestPageableEntity<DtoAuctionItemView>> findAllActiveAuctionItems(Pageable pageable, DtoAuctionItemPageFilter filter) {
+        Page<DtoAuctionItemView> page = auctionItemService.findAllActiveAuctionItems(pageable, filter);
+        return ok(restPageableEntity(page, page.getContent()));
+    }
+
+    @Override
+    public RootEntity<RestPageableEntity<DtoAuctionItemView>> findMyAllAuctionItems(Principal principal, Pageable pageable, DtoAuctionItemPageFilter filter) {
+        Page<DtoAuctionItemView> page = auctionItemService.findMyAllAuctionItems(principal.getName(), pageable, filter);
+        return ok(restPageableEntity(page, page.getContent()));
+    }
+
+    @Override
+    public RootEntity<RestPageableEntity<DtoAuctionItemView>> findJoinedAllAuctionItems(Principal principal, Pageable pageable) {
+        Page<DtoAuctionItemView> page = auctionItemService.findJoinedAllAuctionItems(principal.getName(), pageable);
+        return ok(restPageableEntity(page, page.getContent()));
     }
 }

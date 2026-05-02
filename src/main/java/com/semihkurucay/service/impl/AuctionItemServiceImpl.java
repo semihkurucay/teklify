@@ -2,6 +2,7 @@ package com.semihkurucay.service.impl;
 
 import com.semihkurucay.dto.DtoAuctionItem;
 import com.semihkurucay.dto.DtoAuctionItemCreate;
+import com.semihkurucay.dto.DtoAuctionItemPageFilter;
 import com.semihkurucay.dto.DtoAuctionItemView;
 import com.semihkurucay.entity.AuctionItem;
 import com.semihkurucay.entity.Category;
@@ -12,10 +13,15 @@ import com.semihkurucay.exception.BaseException;
 import com.semihkurucay.exception.ErrorMessage;
 import com.semihkurucay.mapper.AuctionItemMapper;
 import com.semihkurucay.repository.AuctionItemRepository;
+import com.semihkurucay.repository.BidRepository;
 import com.semihkurucay.repository.CategoryRepository;
 import com.semihkurucay.repository.UserRepository;
 import com.semihkurucay.service.AuctionItemService;
+import com.semihkurucay.specification.AuctionItemSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +33,7 @@ import java.time.LocalDateTime;
 class AuctionItemServiceImpl implements AuctionItemService {
 
     private final AuctionItemRepository auctionItemRepository;
+    private final BidRepository bidRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final AuctionItemMapper auctionItemMapper;
@@ -43,10 +50,6 @@ class AuctionItemServiceImpl implements AuctionItemService {
 
     private Boolean chackDateControl(LocalDateTime startDate, LocalDateTime endDate) {
         return startDate.isBefore(endDate);
-    }
-
-    private String getFullName(User user){
-        return user == null ? "" : user.getFirstName() + " " + user.getLastName();
     }
 
     @Transactional
@@ -70,10 +73,7 @@ class AuctionItemServiceImpl implements AuctionItemService {
         auctionItem.getImage()
                 .forEach(image -> image.setAuctionItem(auctionItem));
 
-        DtoAuctionItemView dto = auctionItemMapper.toDtoAuctionItemView(auctionItemRepository.save(auctionItem));
-        dto.setCategoryName(auctionItem.getCategory().getName());
-        dto.setCreatedUserFullName(getFullName(auctionItem.getCreatedUser()));
-        return dto;
+        return auctionItemMapper.toDtoAuctionItemView(auctionItemRepository.save(auctionItem));
     }
 
     @Transactional
@@ -100,11 +100,27 @@ class AuctionItemServiceImpl implements AuctionItemService {
         AuctionItem auctionItem = auctionItemRepository.findById(auctionItemId)
                 .orElseThrow(() -> new BaseException(new ErrorMessage("Teklif", ErrorType.NO_VALUE)));
 
-        DtoAuctionItem dtoAuctionItem = auctionItemMapper.toDtoAuctionItem(auctionItem);
-        dtoAuctionItem.setBidUserFullName(getFullName(auctionItem.getBidUser()));
-        dtoAuctionItem.setCreatedUserFullName(getFullName(auctionItem.getCreatedUser()));
-        dtoAuctionItem.setCategoryName(auctionItem.getCategory().getName());
+        return auctionItemMapper.toDtoAuctionItem(auctionItem);
+    }
 
-        return dtoAuctionItem;
+    @Override
+    public Page<DtoAuctionItemView> findAllActiveAuctionItems(Pageable pageable, DtoAuctionItemPageFilter filter) {
+        Specification<AuctionItem> spec = AuctionItemSpecification.pageFilterAuctionItem(filter.getCategoryId(), filter.getSearch(), true, null);
+        return auctionItemRepository.findAll(spec, pageable)
+                .map(auctionItemMapper::toDtoAuctionItemView);
+    }
+
+    @Override
+    public Page<DtoAuctionItemView> findMyAllAuctionItems(String username, Pageable pageable, DtoAuctionItemPageFilter filter) {
+        Specification<AuctionItem> spec = AuctionItemSpecification.pageFilterAuctionItem(filter.getCategoryId(), filter.getSearch(), null, getUserByUsername(username).getId());
+        return auctionItemRepository.findAll(spec, pageable)
+                .map(auctionItemMapper::toDtoAuctionItemView);
+    }
+
+    @Override
+    public Page<DtoAuctionItemView> findJoinedAllAuctionItems(String username, Pageable pageable) {
+        User user = getUserByUsername(username);
+        return bidRepository.findJoinedAllAuctionItems(user.getId(), pageable)
+                .map(auctionItemMapper::toDtoAuctionItemView);
     }
 }

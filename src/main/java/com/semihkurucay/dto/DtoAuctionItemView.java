@@ -1,9 +1,7 @@
 package com.semihkurucay.dto;
 
 import com.semihkurucay.enums.AuctionStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -12,8 +10,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class DtoAuctionItemView extends DtoBaseDateEntity {
 
     private String title;
