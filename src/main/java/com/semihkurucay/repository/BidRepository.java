@@ -1,6 +1,5 @@
 package com.semihkurucay.repository;
 
-import com.semihkurucay.dto.DtoAuctionItemView;
 import com.semihkurucay.entity.AuctionItem;
 import com.semihkurucay.entity.Bid;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BidRepository extends JpaRepository<Bid, Long> {
 
-    @Query("SELECT ai " +
+    @Query("SELECT DISTINCT ai " +
             "FROM Bid b " +
             "JOIN b.auctionItem ai " +
             "WHERE b.user.id = :userId AND ai.isActive = true " +
